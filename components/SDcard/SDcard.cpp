@@ -143,7 +143,7 @@ esp_err_t SDcard::SDcard_close(){
 
 esp_err_t SDcard::s_example_init_file_counter(int &ACC_init_counter, int &GPS_init_counter){
     int search_counter = 0;
-	char search_name[30];
+	char search_name[200];
 	
 	sprintf(search_name, MOUNT_POINT"/ACC%d.txt", search_counter);
 	while (access(search_name, F_OK) == 0) {

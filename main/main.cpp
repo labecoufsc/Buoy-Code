@@ -29,14 +29,14 @@ CPPI2C::I2c i2c {I2C_NUM_0};
 UBLOX7 gps(UART_NUM_1);
 SDcard sdcard;
 Ringbuffer RingbufGPS(4096);
-Ringbuffer RingbufAccel(100000);
+Ringbuffer RingbufAccel(15000);
 SMS sms;
 NAV_PVT nav_pvt;
 
 using namespace std;
 char buffer[EXAMPLE_MAX_CHAR_SIZE];
 char GPSword[51];
-int16_t ax =0, ay =0, az =0;
+
 
 // allow the SD drive to pick up from where it left off when restarted
 int ACC_count_init = 0;
@@ -64,7 +64,7 @@ static void Initialise_Task(void *arg)
 	ESP_ERROR_CHECK(sdcard.SDcard_init());
 	gpio_set_direction(BLINK_GPIO, GPIO_MODE_OUTPUT);
 	
-	sms.GSM_init();
+	//sms.GSM_init();
 
 	/*int search_counter = 0;
 	char search_name[30];
@@ -113,10 +113,12 @@ void ACCEL_Task(void *arg)
 {	
 	MPU6050 device(0x68);
 	static int time_counter = 0;
-	//float ax, ay, az; //Variables to store the accel values
-	//float gx, gy, gz; //Variables to store the gyro values
+	int length = 64;
+	//size_t buf_free_space = 0;
+	int16_t ax = 0, ay = 0, az = 0; //Variables to store the accel values
  	TickType_t xLastWakeTime;
  	const TickType_t xFrequency = ACC_period; 
+	char buffer[length];
     // Initialise the xLastWakeTime variable with the current time.
     xLastWakeTime = xTaskGetTickCount();
     for( ;; )
@@ -124,19 +126,22 @@ void ACCEL_Task(void *arg)
         // Wait for the next cycle.
         vTaskDelayUntil(&xLastWakeTime, xFrequency);
 		if(time_counter == 0){
-			snprintf(buffer, EXAMPLE_MAX_CHAR_SIZE, "%u,%u,%u,%u,%u,%d\n", nav_pvt.hour, nav_pvt.minute, nav_pvt.second, nav_pvt.day, nav_pvt.month, nav_pvt.year);
-			RingbufAccel.send(buffer, sizeof(buffer));
+			snprintf(buffer, length, "%u,%u,%u,%u,%u,%d\n", nav_pvt.hour, nav_pvt.minute, nav_pvt.second, nav_pvt.day, nav_pvt.month, nav_pvt.year);
+			RingbufAccel.send(buffer, length);
 		}
 		device.getAccelRaw(&ax, &ay, &az);
 		//device.getGyroRaw(&gx, &gy, &gz);
-		cout << "Accelerometer Readings: X: " << ax << ", Y: " << ay << ", Z: " << az << "\n";
+		//cout << "Accelerometer Readings: X: " << ax << ", Y: " << ay << ", Z: " << az << "\n";
 		//cout << "Gyroscope Readings: X: " << gx << ", Y: " << gy << ", Z: " << gz << "\n";
-        snprintf(buffer, 100, "%d, %d, %d\n", ax, ay, az);
-		RingbufAccel.send(buffer, sizeof(buffer));
+        snprintf(buffer, length, "%d, %d, %d\n", ax, ay, az);
+		RingbufAccel.send(buffer, length);
 		if(time_counter == 749){ // it was 299 for 300 in 30 s now it's 749  for 750 in 30 s (25*30)
 			time_counter = 0;
-			snprintf(buffer, EXAMPLE_MAX_CHAR_SIZE, "%u,%u,%u,%u,%u,%d\n", nav_pvt.hour, nav_pvt.minute, nav_pvt.second, nav_pvt.day, nav_pvt.month, nav_pvt.year);
-			RingbufAccel.send(buffer, sizeof(buffer));
+			snprintf(buffer, length, "%u,%u,%u,%u,%u,%d\n", nav_pvt.hour, nav_pvt.minute, nav_pvt.second, nav_pvt.day, nav_pvt.month, nav_pvt.year);
+			RingbufAccel.send(buffer, length);
+			//buf_free_space = RingbufAccel.getSize();
+			//snprintf(buffer, 100,  "Free %zu\n", buf_free_space);
+			//RingbufAccel.send(buffer, sizeof(buffer));
 		}
 		else
 			time_counter++;
@@ -181,7 +186,7 @@ void GSM_Task(void *arg) // number can be changed in sim800l/include/sim800l_cmd
 	int length = 0;
 	uint8_t CTRL_Z[]={0x1a}; 
 	TickType_t xLastWakeTime;
- 	const TickType_t xFrequency = 30000; // send message every 30 seconds
+ 	const TickType_t xFrequency = 12000; // send message every 30 seconds
     // Initialise the xLastWakeTime variable with the current time.
     xLastWakeTime = xTaskGetTickCount();
     for( ;; )
@@ -205,7 +210,7 @@ void GSM_Task(void *arg) // number can be changed in sim800l/include/sim800l_cmd
 void SD_TaskGPS(void *arg)
 {	
 	static int counter = GPS_count_init;
-	char filename[50];
+	char filename[32];
 	esp_err_t ret;
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = 3000; // write every 30 seconds
@@ -217,21 +222,25 @@ void SD_TaskGPS(void *arg)
         // Wait for the next cycle.
         vTaskDelayUntil(&xLastWakeTime, xFrequency);
 		sprintf(filename, MOUNT_POINT"/GPS%d.txt", counter);
-		const char *file_hello = filename;
+		const char *path = filename;
+		//const char *file_hello = filename;
 		counter++;
+		FILE *f = fopen(path, "a"); // Don't use write function to avoiding repeatedly having to open file
 		for(int i = 0; i < 30; i++){
 		gpio_set_level(BLINK_GPIO, 1);
 		char *item = (char *)RingbufGPS.receive(&item_size);
+		fprintf(f, item);
 		RingbufGPS.returnItem(item);
-		ret = sdcard.s_example_write_file(file_hello, item);
-        	if (ret != ESP_OK) {
-             	return;
-        	}
+		//ret = sdcard.s_example_write_file(file_hello, item);
+        //	if (ret != ESP_OK) {
+        //    	return;
+        //	}
 		}
 		printf("Counter: %d\n", counter);
+		fclose(f);
 		gpio_set_level(BLINK_GPIO, 0);
 
-		if(counter == GPS_count_init+1) // create metafile after 5 minutes
+		if(counter == GPS_count_init+10) // create metafile after 5 minutes
 		{
 			sprintf(filename, MOUNT_POINT"/dep%d.txt", counter);
 			const char *file_hello = filename;
@@ -252,30 +261,40 @@ void SD_TaskGPS(void *arg)
 void SD_TaskAccel(void *arg)
 {	
 	static int counter = ACC_count_init;
-	char filename[50];
+	char filename[32];
 	esp_err_t ret;
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = 3000; // write every 30 seconds
 	size_t item_size;
     // Initialise the xLastWakeTime variable with the current time.
     xLastWakeTime = xTaskGetTickCount();
+	int n = 0;
+	size_t buf_free_space = 0;
 	
     for( ;; )
     {
         // Wait for the next cycle.
         vTaskDelayUntil(&xLastWakeTime, xFrequency);
-		sprintf(filename, MOUNT_POINT"/ACC%d.txt", counter);
-		const char *file_hello = filename;
+		n = sprintf(filename, MOUNT_POINT"/ACC%d.txt", counter);
+		const char *path = filename;
+		//const char *file_hello = filename;
 		counter++;
-		for(int i = 0; i < 752; i++){
+		ESP_LOGI(TAG, "Opening file %s", path);
+    	FILE *f = fopen(path, "a"); // Don't use write function to avoiding repeatedly having to open file
+		for(int i = 0; i < 752; i++){ // 753 WITH LINE ON MEMORY SPACE
 		gpio_set_level(BLINK_GPIO, 1);
 		char *item = (char *)RingbufAccel.receive(&item_size);
+		//printf("Free space in buffer is %zu\n", buf_free_space);
+		//printf("Number of bytes in buffer is %d\n", n);
+		fprintf(f, item);
+		//ret = sdcard.s_example_write_file(file_hello, item);
 		RingbufAccel.returnItem(item);
-		ret = sdcard.s_example_write_file(file_hello, item);
-        	if (ret != ESP_OK) {
-             	return;
-        	}
+		//buf_free_space = RingbufAccel.getSize();
+        //	if (ret != ESP_OK) {
+        //     	return;
+        //	}
 		}
+		fclose(f);
 		gpio_set_level(BLINK_GPIO, 0);
 	}
 	
@@ -286,11 +305,11 @@ extern "C" void app_main(void)
 {	
 	TaskHandle_t OnceHandle1 = NULL;
 	xTaskCreate(Once_Task, "Once_Task", 4096, NULL, 28, &OnceHandle1);
-	vTaskDelay(20000/portTICK_PERIOD_MS); // wait for initialisation to complete
+	vTaskDelay(60000/portTICK_PERIOD_MS); // wait for initialisation to complete
 		
-	xTaskCreatePinnedToCore(ACCEL_Task, "ACCEL_Task", 4096, NULL, 10, &ACCELHandle, 0);
-	xTaskCreatePinnedToCore(GPS_Task, "GPS_Task", 4096, NULL, 10, &GPSHandle, 1);
-	xTaskCreatePinnedToCore(GSM_Task, "Gsm_Task", 4096, NULL, 15, &GSMHandle, 1);
+	xTaskCreatePinnedToCore(ACCEL_Task, "ACCEL_Task", 4096, NULL, 10, &ACCELHandle, 1);
+	xTaskCreatePinnedToCore(GPS_Task, "GPS_Task", 4096, NULL, 10, &GPSHandle, 1); 
+	//xTaskCreatePinnedToCore(GSM_Task, "Gsm_Task", 4096, NULL, 15, &GSMHandle, 1);
 	xTaskCreatePinnedToCore(SD_TaskGPS, "SD_TaskGPS", 4096, NULL, 10, &SDGPSHandle, 1);
-	xTaskCreatePinnedToCore(SD_TaskAccel, "SD_TaskAccel", 4096, NULL, 10, &SDAccelHandle, 1);
+	xTaskCreatePinnedToCore(SD_TaskAccel, "SD_TaskAccel", 4096, NULL, 10, &SDAccelHandle, 0); 
 }
