@@ -1,0 +1,2 @@
+/Users/iandownie/.espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/xtensa-esp32-elf/bin/xtensa-esp32-elf-ar qc libcppi2c.a CMakeFiles/__idf_cppi2c.dir/cppi2c.cpp.obj
+/Users/iandownie/.espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/xtensa-esp32-elf/bin/xtensa-esp32-elf-ranlib libcppi2c.a

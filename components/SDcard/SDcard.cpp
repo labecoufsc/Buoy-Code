@@ -141,7 +141,7 @@ esp_err_t SDcard::SDcard_close(){
     return ESP_OK;
 }
 
-esp_err_t SDcard::s_example_init_file_counter(int &ACC_init_counter, int &GPS_init_counter){
+/*esp_err_t SDcard::s_example_init_file_counter(int &ACC_init_counter, int &GPS_init_counter){
     int search_counter = 0;
 	char search_name[200];
 	
@@ -163,5 +163,72 @@ esp_err_t SDcard::s_example_init_file_counter(int &ACC_init_counter, int &GPS_in
 	}
 
 	GPS_init_counter = search_counter;
+    return ESP_OK;
+}
+*/
+
+esp_err_t SDcard::s_example_init_file_counter(int &ACC_init_counter, int &GPS_init_counter){
+    DIR *dir;
+    struct dirent *ent;
+    int highest_index = -1;
+	
+   // Open the directory where the files are stored on the SD card
+    if ((dir = opendir(MOUNT_POINT)) != NULL) {
+        // Iterate through each entry in the directory
+        while ((ent = readdir(dir)) != NULL) {
+            // Check if the entry is a file and starts with "file"
+            if (ent->d_type == DT_REG && strncmp(ent->d_name, "ACC", 3) == 0){
+                // Extract the index from the filename
+                int index = atoi(ent->d_name + 3);
+                // Update the highest index if the current index is greater
+                if (index > highest_index) {
+                    highest_index = index;
+                }
+            }
+        }
+        closedir(dir);
+    } else {
+        // Error opening directory
+        printf("Error opening directory");
+        
+    }
+
+    if (highest_index == -1) {
+        printf("No files found on SD card.\n");
+    } else {
+        printf("File with the highest index: file%d\n", highest_index);
+    }
+
+	ACC_init_counter = highest_index;
+    
+
+   // Open the directory where the files are stored on the SD card
+    if ((dir = opendir(MOUNT_POINT)) != NULL) {
+        // Iterate through each entry in the directory
+        while ((ent = readdir(dir)) != NULL) {
+            // Check if the entry is a file and starts with "file"
+            if (ent->d_type == DT_REG && strncmp(ent->d_name, "GPS", 3) == 0){
+                // Extract the index from the filename
+                int index = atoi(ent->d_name + 3);
+                // Update the highest index if the current index is greater
+                if (index > highest_index) {
+                    highest_index = index;
+                }
+            }
+        }
+        closedir(dir);
+    } else {
+        // Error opening directory
+        printf("Error opening directory");
+        
+    }
+
+    if (highest_index == -1) {
+        printf("No files found on SD card.\n");
+    } else {
+        printf("File with the highest index: file%d\n", highest_index);
+    }
+
+	GPS_init_counter = highest_index;
     return ESP_OK;
 }

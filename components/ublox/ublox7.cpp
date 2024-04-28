@@ -130,6 +130,7 @@ esp_err_t UBLOX7::ack_status(uint8_t cls_id, uint8_t msg_id)
 			else if(i > 2){
 				ack_pkt[i] = data;
 				i++;
+				
 			}
 		}
 	}

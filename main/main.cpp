@@ -305,7 +305,7 @@ extern "C" void app_main(void)
 {	
 	TaskHandle_t OnceHandle1 = NULL;
 	xTaskCreate(Once_Task, "Once_Task", 4096, NULL, 28, &OnceHandle1);
-	vTaskDelay(60000/portTICK_PERIOD_MS); // wait for initialisation to complete
+	vTaskDelay(30000/portTICK_PERIOD_MS); // wait for initialisation to complete
 		
 	xTaskCreatePinnedToCore(ACCEL_Task, "ACCEL_Task", 4096, NULL, 10, &ACCELHandle, 1);
 	xTaskCreatePinnedToCore(GPS_Task, "GPS_Task", 4096, NULL, 10, &GPSHandle, 1); 

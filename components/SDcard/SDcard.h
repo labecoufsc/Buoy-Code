@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include "ffconf.h"
+#include <dirent.h>
 
 #define EXAMPLE_MAX_CHAR_SIZE    64
 #define FF_FS_EXFAT 0 
@@ -23,7 +24,7 @@ static const char *TAG = "example";
 #define PIN_NUM_MOSI  GPIO_NUM_23
 #define PIN_NUM_CLK   GPIO_NUM_18
 #define PIN_NUM_CS    GPIO_NUM_5
-#define SDMMC_FREQ_DEFAULT 15000
+#define SDMMC_FREQ_DEFAULT 18000
 
 class SDcard
 {
