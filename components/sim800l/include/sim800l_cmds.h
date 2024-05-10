@@ -449,8 +449,8 @@ static GSM_Cmd confTEXT =
 //Sets phone number
 static GSM_Cmd confPHONENUMBER = 
 {
-	.cmd = "AT+CMGS=\"+5548991289203\"\r\n",//5598981136925
-	.cmdSize = sizeof("AT+CMGS=\"+5548991289203\"\r\n")-1,
+	.cmd = "AT+CMGS=\"+5548991654583\"\r\n",//5598981136925
+	.cmdSize = sizeof("AT+CMGS=\"+5548991654583\"\r\n")-1,
 	.cmdResponseOnOk = "..>",
 	.timeoutMs = 10000,
 	.delayMs = 6000,

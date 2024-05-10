@@ -26,7 +26,7 @@ MPU6050::MPU6050(int8_t addr, bool run_update_thread) {
 	esp32_i2c_write_word(MPU6050_addr, 0x1c, ACCEL_CONFIG); //Configure accelerometer settings - see Register Map (see MPU6050.h for the GYRO_CONFIG parameter)
 
 	//Set offsets to zero
-	esp32_i2c_write_word(MPU6050_addr, 0x06, 0b00000000), esp32_i2c_write_word(MPU6050_addr, 0x07, 0b00000000), esp32_i2c_write_word(MPU6050_addr, 0x08, 0b00000000), esp32_i2c_write_word(MPU6050_addr, 0x09, 0b00000000), esp32_i2c_write_word(MPU6050_addr, 0x0A, 0b00000000), esp32_i2c_write_word(MPU6050_addr, 0x0B, 0b00000000), esp32_i2c_write_word(MPU6050_addr, 0x00, 0b10000001), esp32_i2c_write_word(MPU6050_addr, 0x01, 0b00000001), esp32_i2c_write_word(MPU6050_addr, 0x02, 0b10000001);
+	//esp32_i2c_write_word(MPU6050_addr, 0x06, 0b00000000), esp32_i2c_write_word(MPU6050_addr, 0x07, 0b00000000), esp32_i2c_write_word(MPU6050_addr, 0x08, 0b00000000), esp32_i2c_write_word(MPU6050_addr, 0x09, 0b00000000), esp32_i2c_write_word(MPU6050_addr, 0x0A, 0b00000000), esp32_i2c_write_word(MPU6050_addr, 0x0B, 0b00000000), esp32_i2c_write_word(MPU6050_addr, 0x00, 0b10000001), esp32_i2c_write_word(MPU6050_addr, 0x01, 0b00000001), esp32_i2c_write_word(MPU6050_addr, 0x02, 0b10000001);
 
 	//if (run_update_thread){
 	//	std::thread(&MPU6050::_update, this).detach(); //Create a seperate thread, for the update routine to run in the background, and detach it, allowing the program to continue

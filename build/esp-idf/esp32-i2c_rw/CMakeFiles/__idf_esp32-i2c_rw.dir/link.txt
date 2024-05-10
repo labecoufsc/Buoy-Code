@@ -1,2 +1,0 @@
-/Users/iandownie/.espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/xtensa-esp32-elf/bin/xtensa-esp32-elf-ar qc libesp32-i2c_rw.a "CMakeFiles/__idf_esp32-i2c_rw.dir/esp32_i2c_rw.c.obj"
-/Users/iandownie/.espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/xtensa-esp32-elf/bin/xtensa-esp32-elf-ranlib libesp32-i2c_rw.a

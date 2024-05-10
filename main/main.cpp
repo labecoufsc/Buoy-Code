@@ -25,7 +25,7 @@ TaskHandle_t OnceHandle;
 
 CPPUART::Uart uart {UART_NUM_1};
 CPPI2C::I2c i2c {I2C_NUM_0};
-//MPU6050 device(0x68);
+MPU6050 device(0x68);
 UBLOX7 gps(UART_NUM_1);
 SDcard sdcard;
 Ringbuffer RingbufGPS(4096);
@@ -131,7 +131,9 @@ void ACCEL_Task(void *arg)
 		}
 		device.getAccelRaw(&ax, &ay, &az);
 		//device.getGyroRaw(&gx, &gy, &gz);
-		//cout << "Accelerometer Readings: X: " << ax << ", Y: " << ay << ", Z: " << az << "\n";
+		cout << "Accelerometer Readings: X: " << ax << ", Y: " << ay << ", Z: " << az << "\n";
+		printf("%d, %d, %d\n", ax, ay, az);
+		printf("%i, %i, %i\n", ax, ay, az);
 		//cout << "Gyroscope Readings: X: " << gx << ", Y: " << gy << ", Z: " << gz << "\n";
         snprintf(buffer, length, "%d, %d, %d\n", ax, ay, az);
 		RingbufAccel.send(buffer, length);
@@ -186,7 +188,7 @@ void GSM_Task(void *arg) // number can be changed in sim800l/include/sim800l_cmd
 	int length = 0;
 	uint8_t CTRL_Z[]={0x1a}; 
 	TickType_t xLastWakeTime;
- 	const TickType_t xFrequency = 12000; // send message every 30 seconds
+ 	const TickType_t xFrequency = 6000; // send message every 
     // Initialise the xLastWakeTime variable with the current time.
     xLastWakeTime = xTaskGetTickCount();
     for( ;; )
