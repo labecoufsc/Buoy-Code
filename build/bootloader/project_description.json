@@ -1,0 +1,26 @@
+{
+    "project_name":       "bootloader",
+    "project_path":       "/Users/iandownie/Documents/esp/esp-idf/components/bootloader/subproject",
+    "build_dir":          "/Users/iandownie/Documents/esp/esp-idf/examples/Example_projects/Acc_GPSBIN_SD_SIM_TASKS_RBUF_PEDRO/build/bootloader",
+    "config_file":        "/Users/iandownie/Documents/esp/esp-idf/examples/Example_projects/Acc_GPSBIN_SD_SIM_TASKS_RBUF_PEDRO/sdkconfig",
+    "config_defaults":    "",
+    "bootloader_elf":     "",
+    "app_elf":            "bootloader.elf",
+    "app_bin":            "bootloader.bin",
+    "build_type":         "flash_app",
+    "git_revision":       "v5.1-dev-4557-gf404fe96b1",
+    "target":             "esp32",
+    "rev":                "0",
+    "min_rev":            "0",
+    "max_rev":            "399",
+    "phy_data_partition": "",
+    "monitor_baud" :      "115200",
+    "monitor_toolprefix": "xtensa-esp32-elf-",
+    "config_environment" : {
+        "COMPONENT_KCONFIGS" : "/Users/iandownie/Documents/esp/esp-idf/components/efuse/Kconfig;/Users/iandownie/Documents/esp/esp-idf/components/esp_common/Kconfig;/Users/iandownie/Documents/esp/esp-idf/components/esp_hw_support/Kconfig;/Users/iandownie/Documents/esp/esp-idf/components/esp_system/Kconfig;/Users/iandownie/Documents/esp/esp-idf/components/freertos/Kconfig;/Users/iandownie/Documents/esp/esp-idf/components/hal/Kconfig;/Users/iandownie/Documents/esp/esp-idf/components/log/Kconfig;/Users/iandownie/Documents/esp/esp-idf/components/newlib/Kconfig;/Users/iandownie/Documents/esp/esp-idf/components/soc/Kconfig;/Users/iandownie/Documents/esp/esp-idf/components/spi_flash/Kconfig",
+        "COMPONENT_KCONFIGS_PROJBUILD" : "/Users/iandownie/Documents/esp/esp-idf/components/bootloader/Kconfig.projbuild;/Users/iandownie/Documents/esp/esp-idf/components/esp_app_format/Kconfig.projbuild;/Users/iandownie/Documents/esp/esp-idf/components/esp_rom/Kconfig.projbuild;/Users/iandownie/Documents/esp/esp-idf/components/esptool_py/Kconfig.projbuild;/Users/iandownie/Documents/esp/esp-idf/components/partition_table/Kconfig.projbuild"
+    },
+    "build_components" : [ "bootloader", "bootloader_support", "efuse", "esp_app_format", "esp_common", "esp_hw_support", "esp_rom", "esp_system", "esptool_py", "freertos", "hal", "log", "main", "micro-ecc", "newlib", "partition_table", "soc", "spi_flash", "xtensa", "" ],
+    "build_component_paths" : [ "/Users/iandownie/Documents/esp/esp-idf/components/bootloader", "/Users/iandownie/Documents/esp/esp-idf/components/bootloader_support", "/Users/iandownie/Documents/esp/esp-idf/components/efuse", "/Users/iandownie/Documents/esp/esp-idf/components/esp_app_format", "/Users/iandownie/Documents/esp/esp-idf/components/esp_common", "/Users/iandownie/Documents/esp/esp-idf/components/esp_hw_support", "/Users/iandownie/Documents/esp/esp-idf/components/esp_rom", "/Users/iandownie/Documents/esp/esp-idf/components/esp_system", "/Users/iandownie/Documents/esp/esp-idf/components/esptool_py", "/Users/iandownie/Documents/esp/esp-idf/components/freertos", "/Users/iandownie/Documents/esp/esp-idf/components/hal", "/Users/iandownie/Documents/esp/esp-idf/components/log", "/Users/iandownie/Documents/esp/esp-idf/components/bootloader/subproject/main", "/Users/iandownie/Documents/esp/esp-idf/components/bootloader/subproject/components/micro-ecc", "/Users/iandownie/Documents/esp/esp-idf/components/newlib", "/Users/iandownie/Documents/esp/esp-idf/components/partition_table", "/Users/iandownie/Documents/esp/esp-idf/components/soc", "/Users/iandownie/Documents/esp/esp-idf/components/spi_flash", "/Users/iandownie/Documents/esp/esp-idf/components/xtensa", "" ],
+    "debug_prefix_map_gdbinit": ""
+}
